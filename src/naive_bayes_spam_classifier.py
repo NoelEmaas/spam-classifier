@@ -1,4 +1,3 @@
-import re
 from nltk.tokenize import word_tokenize
 from collections import defaultdict, Counter
 
@@ -12,13 +11,6 @@ class NaiveBayesSpamClassifier:
 
     # Train the classifier
     def train (self, training_data):
-
-        # - list of distinct words from entire data set
-        # - list of distinct words from spam messages
-        # - list of distinct words from ham messages
-        # - count of each word in spam messages
-        # - count of each word in ham messages'
-
         print('Training the classifier...')
 
         spam_word_counts = Counter()
