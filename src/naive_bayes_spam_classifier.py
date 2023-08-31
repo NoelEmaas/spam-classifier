@@ -66,21 +66,5 @@ class NaiveBayesSpamClassifier:
         
         print('Prediction complete!\n')
 
-        self._store_result_in_csv(test_result)
-        
-            
-    # Store result in new csv file which contains the predicted label, and message
-    def _store_result_in_csv (self, test_result):
-        orig_test_data = pd.read_csv('../data/TestData.csv', encoding='ISO-8859-1')
-        orig_test_data['label'] = test_result
+        return test_result
 
-        # Reorder columns to have the label column as the first column
-        column_order = ['label'] + [col for col in orig_test_data.columns if col != 'label']
-        orig_test_data = orig_test_data[column_order]
-
-        # Save the result in a csv file
-        test_result_file_name = '../data/EmaasResultData.csv'
-        orig_test_data.to_csv(test_result_file_name, index = False) 
-
-        print('Successfully saved predicted data!')
-        

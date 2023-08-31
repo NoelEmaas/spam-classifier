@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+import csv
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -22,11 +23,18 @@ def main ():
     # Create a NaiveBayesSpamClassifier object
     classifier = NaiveBayesSpamClassifier()
 
-    # Train the classifier
+    # Train classifier
     classifier.train(training_data)
 
     # Test the classifier
-    classifier.test(testing_data)
+    prediction_result = classifier.test(testing_data)
+
+    # store result in a csv file
+    result_file_path = '../data/EmaasResultData.csv'
+    testing_data.insert(0, 'label', prediction_result)
+    testing_data.to_csv(result_file_path, index = False)
+
+    print('Result save in csv file!')
 
 
 #Preprocess and clean the data
