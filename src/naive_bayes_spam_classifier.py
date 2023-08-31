@@ -1,3 +1,4 @@
+import pandas as pd
 from nltk.tokenize import word_tokenize
 from collections import defaultdict, Counter
 
@@ -8,6 +9,7 @@ class NaiveBayesSpamClassifier:
         self.total_number_of_words = 0
         self.spam_word_probabilities = defaultdict()
         self.ham_word_probabilities = defaultdict()
+
 
     # Train the classifier
     def train (self, training_data):
@@ -40,11 +42,14 @@ class NaiveBayesSpamClassifier:
 
         print("Training complete!\n")
 
+
     # Predict the label of a message based on trainging data
     def test (self, test_data):
-        print('Classification Result:')
+        print('Predicting labels for test data...')
 
-        for idx, row in test_data.iterrows():
+        test_result = []
+
+        for _, row in test_data.iterrows():
             probability_spam = 1
             probability_ham = 1
 
@@ -57,7 +62,25 @@ class NaiveBayesSpamClassifier:
                 probability_spam *= self.spam_word_probabilities.get(word, smoothing_factor)
                 probability_ham *= self.ham_word_probabilities.get(word, smoothing_factor)
 
-            print("[SPAM] " + message) if probability_spam > probability_ham else print("[HAM] " + message)
+            test_result.append('spam' if probability_spam > probability_ham else 'ham')
+        
+        print('Prediction complete!\n')
+
+        self._store_result_in_csv(test_result)
+        
             
-            if idx == 10:
-                break
+    # Store result in new csv file which contains the predicted label, and message
+    def _store_result_in_csv (self, test_result):
+        orig_test_data = pd.read_csv('../data/TestData.csv', encoding='ISO-8859-1')
+        orig_test_data['label'] = test_result
+
+        # Reorder columns to have the label column as the first column
+        column_order = ['label'] + [col for col in orig_test_data.columns if col != 'label']
+        orig_test_data = orig_test_data[column_order]
+
+        # Save the result in a csv file
+        test_result_file_name = '../data/EmaasResultData.csv'
+        orig_test_data.to_csv(test_result_file_name, index = False) 
+
+        print('Successfully saved predicted data!')
+        

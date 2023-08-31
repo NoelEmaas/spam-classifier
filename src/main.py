@@ -6,7 +6,7 @@ from nltk.corpus import stopwords
 from naive_bayes_spam_classifier import NaiveBayesSpamClassifier
 
 # download stop words
-nltk.download('stopwords')
+nltk.download('stopwords', quiet = True)
 
 def main ():
     # Read the data
@@ -15,6 +15,8 @@ def main ():
 
     # Cleaning and preprocessing of data
     training_data = preprocess_data(training_data)
+    training_data = training_data.drop_duplicates()
+    training_data = training_data.dropna()
     testing_data = preprocess_data(testing_data)
 
     # Create a NaiveBayesSpamClassifier object
@@ -27,9 +29,8 @@ def main ():
     classifier.test(testing_data)
 
 
+#Preprocess and clean the data
 def preprocess_data (data):
-    data = data.drop_duplicates()
-    data = data.dropna()
     stop_words = stopwords.words('english')
 
     def clean_message(message):
