@@ -1,8 +1,12 @@
 import pandas as pd
 import re
+import nltk
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 from naive_bayes_spam_classifier import NaiveBayesSpamClassifier
 
+# download stop words
+nltk.download('stopwords')
 
 def main ():
     # Read the data
@@ -26,12 +30,13 @@ def main ():
 def preprocess_data (data):
     data = data.drop_duplicates()
     data = data.dropna()
+    stop_words = stopwords.words('english')
 
     def clean_message(message):
         message = message.lower()
         message = re.sub(r'[^\w\s]', '', message)
         words = word_tokenize(message)
-        words = [word for word in words if word.isalpha()]
+        words = [word for word in words if (word not in stop_words) and word.isalpha()]
         cleaned_message = ' '.join(words)
         return cleaned_message
 
