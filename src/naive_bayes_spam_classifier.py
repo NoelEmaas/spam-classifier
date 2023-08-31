@@ -1,6 +1,10 @@
-import pandas as pd
+import re
+import nltk
+from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from collections import defaultdict, Counter
+
+nltk.download('stopwords', quiet = True)
 
 
 class NaiveBayesSpamClassifier:
@@ -65,6 +69,20 @@ class NaiveBayesSpamClassifier:
             test_result.append('spam' if probability_spam > probability_ham else 'ham')
         
         print('Prediction complete!\n')
-
         return test_result
+    
+    
+    # Cleaning of data
+    def preprocess (self, data):
+        stop_words = stopwords.words('english')
 
+        def clean_message(message):
+            message = message.lower()
+            message = re.sub(r'[^\w\s]', '', message)
+            words = word_tokenize(message)
+            words = [word for word in words if (word not in stop_words) and word.isalpha()]
+            cleaned_message = ' '.join(words)
+            return cleaned_message
+
+        data['message'] = data['message'].apply(clean_message)
+        return data

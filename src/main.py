@@ -1,27 +1,17 @@
 import pandas as pd
-import re
-import csv
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
 from naive_bayes_spam_classifier import NaiveBayesSpamClassifier
-
-# download stop words
-nltk.download('stopwords', quiet = True)
 
 def main ():
     # Read the data
     training_data = pd.read_csv('../data/TrainingData.csv', encoding='ISO-8859-1')
     testing_data = pd.read_csv('../data/TestData.csv', encoding='ISO-8859-1')
 
-    # Cleaning and preprocessing of data
-    training_data = preprocess_data(training_data)
-    training_data = training_data.drop_duplicates()
-    training_data = training_data.dropna()
-    testing_data = preprocess_data(testing_data)
-
     # Create a NaiveBayesSpamClassifier object
     classifier = NaiveBayesSpamClassifier()
+
+    # Cleaning of data
+    training_data = classifier.preprocess(training_data)
+    testing_data = classifier.preprocess(testing_data)
 
     # Train classifier
     classifier.train(training_data)
@@ -29,28 +19,15 @@ def main ():
     # Test the classifier
     prediction_result = classifier.test(testing_data)
 
-    # store result in a csv file
+    # Save prediction result
+    save_result_to_csv(prediction_result, testing_data)
+
+
+def save_result_to_csv (prediction_result, testing_data):
     result_file_path = '../data/EmaasResultData.csv'
     testing_data.insert(0, 'label', prediction_result)
     testing_data.to_csv(result_file_path, index = False)
-
-    print('Result save in csv file!')
-
-
-#Preprocess and clean the data
-def preprocess_data (data):
-    stop_words = stopwords.words('english')
-
-    def clean_message(message):
-        message = message.lower()
-        message = re.sub(r'[^\w\s]', '', message)
-        words = word_tokenize(message)
-        words = [word for word in words if (word not in stop_words) and word.isalpha()]
-        cleaned_message = ' '.join(words)
-        return cleaned_message
-
-    data['message'] = data['message'].apply(clean_message)
-    return data
+    print('Result saved in csv file!')
 
 
 if __name__ == "__main__":
