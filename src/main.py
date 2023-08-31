@@ -9,9 +9,9 @@ def main ():
     training_data = pd.read_csv('../data/TrainingData.csv', encoding='ISO-8859-1')
     testing_data = pd.read_csv('../data/TestData.csv', encoding='ISO-8859-1')
 
-    # Clean the data
-    training_data = cleanData(training_data)
-    testing_data = cleanData(testing_data)
+    # Cleaning and preprocessing of data
+    training_data = preprocess_data(training_data)
+    testing_data = preprocess_data(testing_data)
 
     # Create a NaiveBayesSpamClassifier object
     classifier = NaiveBayesSpamClassifier()
@@ -23,7 +23,7 @@ def main ():
     classifier.test(testing_data)
 
 
-def cleanData (data):
+def preprocess_data (data):
     data = data.drop_duplicates()
     data = data.dropna()
 
