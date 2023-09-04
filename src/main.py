@@ -16,18 +16,14 @@ def main ():
     # Train classifier
     classifier.train(training_data)
 
-    # Test the classifier
+    # Test the classifier and store result
     prediction_result = classifier.test(testing_data)
 
-    # Save prediction result
-    save_result_to_csv(prediction_result, testing_data)
-
-
-def save_result_to_csv (prediction_result, testing_data):
+    # Save prediction result to csv
     result_file_path = '../data/EmaasResultData.csv'
     testing_data.insert(0, 'label', prediction_result)
     testing_data.to_csv(result_file_path, index = False)
-    print('Result saved in csv file!')
+    print('Result saved in EmaasResultData.csv file!')
 
 
 if __name__ == "__main__":
