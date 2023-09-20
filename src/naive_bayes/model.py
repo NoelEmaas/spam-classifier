@@ -5,7 +5,7 @@ from nltk.tokenize import word_tokenize
 from collections import defaultdict, Counter
 
 nltk.download('stopwords', quiet = True)
-
+nltk.download('punkt', quiet = True)
 
 class NaiveBayesSpamClassifier:
     def __init__ (self):
